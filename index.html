@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BDR Outsourcing ROI Calculator | Guesty</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 32px;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.75rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      font-size: 1.1rem;
+      margin-top: 0;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .metric-box {
+      background: #f1f5f9;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .metric-title {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px;
+    }
+    .highlight {
+      color: var(--success);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background-color: #f8fafc;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Outsourced BDR Campaign & ROI Calculator</h1>
+  
+  <div class="grid">
+    <!-- In-House Baseline Inputs -->
+    <div class="card">
+      <h2>1. Current In-House BDR Baseline</h2>
+      <div class="form-group">
+        <label>Current Annual BDR Salary ($)</label>
+        <input type="number" id="bdrSalary" value="85000">
+      </div>
+      <div class="form-group">
+        <label>Monthly Output (Meetings / Month)</label>
+        <input type="number" id="monthlyOutput" value="30">
+      </div>
+      <div class="form-group">
+        <label>Call-to-Meeting Conversion Rate (%)</label>
+        <input type="number" step="0.1" id="convRate" value="2.5">
+      </div>
+    </div>
+
+    <!-- Outsourced Campaign Target Inputs -->
+    <div class="card">
+      <h2>2. Outsourced Campaign Targets</h2>
+      <div class="form-group">
+        <label>Target Meetings Wanted</label>
+        <input type="number" id="targetMeetings" value="200">
+      </div>
+      <div class="form-group">
+        <label>Proposed Cost Per Call ($)</label>
+        <input type="number" step="0.05" id="payPerCall" value="2.95">
+      </div>
+      <div class="form-group">
+        <label>Proposed Incentive Per Meeting ($)</label>
+        <input type="number" id="payPerMeeting" value="50">
+      </div>
+    </div>
+
+    <!-- Results Overview -->
+    <div class="card full-width">
+      <h2>3. Economics & Savings Analysis</h2>
+      <div class="grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="metric-box">
+          <div class="metric-title">Current Cost / Meeting</div>
+          <div class="metric-value" id="currentCostPerMeeting">$0</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-title">Planned Cost / Meeting</div>
+          <div class="metric-value" id="plannedCostPerMeeting">$0</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-title">Total Campaign Budget</div>
+          <div class="metric-value" id="totalCampaignCost">$0</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-title">Cost Savings (%)</div>
+          <div class="metric-value highlight" id="gainLoss">-0%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quality Level Breakdown -->
+    <div class="card full-width">
+      <h2>4. Conversion Efficiency Matrix (Quality Sensitivity)</h2>
+      <p style="font-size:0.875rem; color:var(--text-muted);">
+        Shows how caller conversion rate affects required call volume while holding campaign budget constant.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Quality Level</th>
+            <th>Conversion Rate</th>
+            <th>Calls Required</th>
+            <th>Equivalent Pay / Call</th>
+            <th>Total Budget</th>
+          </tr>
+        </thead>
+        <tbody id="matrixBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function calculate() {
+  const salary = parseFloat(document.getElementById('bdrSalary').value) || 0;
+  const output = parseFloat(document.getElementById('monthlyOutput').value) || 1;
+  const convRate = (parseFloat(document.getElementById('convRate').value) || 1) / 100;
+  
+  const targetMeetings = parseFloat(document.getElementById('targetMeetings').value) || 0;
+  const payPerCall = parseFloat(document.getElementById('payPerCall').value) || 0;
+  const payPerMeeting = parseFloat(document.getElementById('payPerMeeting').value) || 0;
+
+  // In-House Metrics
+  const monthlySalary = salary / 12;
+  const currentCostPerMeeting = monthlySalary / output;
+  const currentCostPerCall = currentCostPerMeeting * convRate;
+
+  // Outsourced Metrics
+  const expectedCalls = targetMeetings / convRate;
+  const totalCallSpend = expectedCalls * payPerCall;
+  const totalMeetingSpend = targetMeetings * payPerMeeting;
+  const totalCampaignCost = totalCallSpend + totalMeetingSpend;
+  const plannedCostPerMeeting = totalCampaignCost / targetMeetings;
+  const gainLoss = ((plannedCostPerMeeting - currentCostPerMeeting) / currentCostPerMeeting) * 100;
+
+  // Render Metrics
+  document.getElementById('currentCostPerMeeting').innerText = '$' + currentCostPerMeeting.toFixed(0);
+  document.getElementById('plannedCostPerMeeting').innerText = '$' + plannedCostPerMeeting.toFixed(0);
+  document.getElementById('totalCampaignCost').innerText = '$' + totalCampaignCost.toLocaleString('en-US', {maximumFractionDigits:0});
+  document.getElementById('gainLoss').innerText = gainLoss.toFixed(1) + '%';
+
+  // Render Matrix
+  const matrixBody = document.getElementById('matrixBody');
+  matrixBody.innerHTML = '';
+  const levels = [0.005, 0.010, 0.015, 0.020, 0.025, 0.030, 0.035];
+
+  levels.forEach((rate, idx) => {
+    const callsNeeded = targetMeetings / rate;
+    const allowablePayPerCall = (totalCampaignCost - totalMeetingSpend) / callsNeeded;
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>Level ${idx + 1}</td>
+      <td>${(rate * 100).toFixed(2)}%</td>
+      <td>${Math.round(callsNeeded).toLocaleString()}</td>
+      <td>$${allowablePayPerCall.toFixed(2)}</td>
+      <td>$${Math.round(totalCampaignCost).toLocaleString()}</td>
+    `;
+    matrixBody.appendChild(tr);
+  });
+}
+
+document.querySelectorAll('input').forEach(input => {
+  input.addEventListener('input', calculate);
+});
+
+calculate();
+</script>
+</body>
+</html>
